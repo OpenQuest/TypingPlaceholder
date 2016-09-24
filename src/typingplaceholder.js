@@ -11,6 +11,10 @@
         return obj;
     }
 
+    function isArray(arr){
+        return toString.apply(arr) === '[object Array]';
+    }
+
     // defaults
     var defaults = {
         letterDelay: 100, //milliseconds
@@ -22,9 +26,9 @@
         cursor: '|'
     };
 
-    function TypingPlaceholder(el, text, options){
+    function TypingPlaceholder(el, texts, options){
         this.el = el;
-        this.text = text;
+        this.texts = texts;
         this.options = extend(defaults, options || {});
         this.timeouts = [];
         this.begin();
@@ -33,36 +37,46 @@
     TypingPlaceholder.prototype.begin = function (){
         var self = this;
 
+        if (! isArray(self.texts)) {
+            throw new Error('The "texts" property of options must be an Array');
+        }
+
         self.originalPlaceholder = self.el.getAttribute('placeholder');
 
         if (self.options.startOnFocus) {
             self.el.addEventListener('focus', function(){
-                self.processText(self.text);
+                self.processText(0);
             });
             self.el.addEventListener('blur', function(){
                 self.cleanUp();
             });
         }else{
-            self.processText(self.text);
+            self.processText(0);
         }
     }
 
-    TypingPlaceholder.prototype.processText = function (str){
+    TypingPlaceholder.prototype.processText = function (index){
         var self = this,
             timeout;
 
-        self.typingLetter(str, function(){
+        self.typingString(self.texts[index], function(){
             console.info('done');
             self.timeouts = [];
-            if (self.options.loop) {
-                self.processText(self.text);
-            }
+
+            timeout = setTimeout(function(){
+                var nextIndex = self.options.loop ? ((index+1) % self.texts.length) : (index+1);
+                self.processText(nextIndex);
+            }, self.options.sentenceDelay);
+
+            self.timeouts.push(timeout);
         });
     }
 
-    TypingPlaceholder.prototype.typingLetter = function(str, callback){
+    TypingPlaceholder.prototype.typingString = function(str, callback){
         var self = this,
             timeout;
+
+        if (!str) {return false;}
 
         for (var i = 0; i < str.length; i++){
             timeout = setTimeout(typingLetterCallback, self.options.letterDelay * i, i);
@@ -72,9 +86,8 @@
 
 
         function typingLetterCallback (index){
-            console.log(self.text[index]);
-            self.el.setAttribute('placeholder', self.text.substr(0, index + 1) +(!self.options.showCursor || index===self.text.length - 1 ? '': self.options.cursor));
-            if(index == self.text.length - 1){
+            self.el.setAttribute('placeholder', str.substr(0, index + 1) +(!self.options.showCursor || index===str.length - 1 ? '': self.options.cursor));
+            if(index == str.length - 1){
                 callback();
             }
         }
