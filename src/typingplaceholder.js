@@ -13,10 +13,13 @@
 
     // defaults
     var defaults = {
-        // shuffle: false,
-        letterDelay: 300,
+        letterDelay: 100, //milliseconds
+        sentenceDelay: 1000, //milliseconds
         loop: false,
-        startOnFocus: true
+        startOnFocus: true,
+        shuffle: false,
+        showCursor: true,
+        cursor: '|'
     };
 
     function TypingPlaceholder(el, text, options){
@@ -47,6 +50,18 @@
     TypingPlaceholder.prototype.processText = function (str){
         var self = this,
             timeout;
+        self.typingLetter(str, function(){
+            console.info('done');
+            self.timeouts = [];
+            if (self.options.loop) {
+                self.processText(self.text);
+            }
+        });
+    }
+
+    TypingPlaceholder.prototype.typingLetter = function(str, callback){
+        var self = this,
+            timeout;
 
         for (var i = 0; i < str.length; i++){
             timeout = setTimeout(typingLetterCallback, self.options.letterDelay * i, i);
@@ -58,9 +73,11 @@
         function typingLetterCallback (index){
             console.log(self.text[index]);
             self.el.setAttribute('placeholder', self.text.substr(0, index + 1));
+            if(index == self.text.length - 1){
+                callback();
+            }
         }
     }
-
     TypingPlaceholder.prototype.cleanUp = function(){
         var self = this;
 
