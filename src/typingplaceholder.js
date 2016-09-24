@@ -50,6 +50,7 @@
     TypingPlaceholder.prototype.processText = function (str){
         var self = this,
             timeout;
+
         self.typingLetter(str, function(){
             console.info('done');
             self.timeouts = [];
@@ -72,7 +73,7 @@
 
         function typingLetterCallback (index){
             console.log(self.text[index]);
-            self.el.setAttribute('placeholder', self.text.substr(0, index + 1));
+            self.el.setAttribute('placeholder', self.text.substr(0, index + 1) +(!self.options.showCursor || index===self.text.length - 1 ? '': self.options.cursor));
             if(index == self.text.length - 1){
                 callback();
             }
