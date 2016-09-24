@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>typingpalceholder.js</title>
+    <script type="text/javascript" src="src/typingplaceholder.js"></script>
+</head>
+<body>
+    <input type="text" name="" value="" placeholder="placeholder" id="input1">
+    <script type="text/javascript">
+        var input1 = document.getElementById('input1');
+        var text1 = input1.getAttribute('placeholder');
+        var demo1 = new TypingPlaceholder(input1, text1,{loop: true});
+        // console.log(demo1.options)
+    </script>
+</body>
+</html>

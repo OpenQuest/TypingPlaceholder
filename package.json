@@ -1,0 +1,25 @@
+{
+  "name": "typingplaceholder",
+  "version": "1.0.0",
+  "description": "a very good js Library, using the placeholder property of the input element to display the custom text in the form of typing, which can be used to prompt.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenQuest/TypingPlaceholder.git"
+  },
+  "keywords": [
+    "js",
+    "placeholder",
+    "typing",
+    "input"
+  ],
+  "author": "lingshanjun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpenQuest/TypingPlaceholder/issues"
+  },
+  "homepage": "https://github.com/OpenQuest/TypingPlaceholder#readme"
+}
